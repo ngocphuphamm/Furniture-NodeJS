@@ -42,6 +42,11 @@ app.use(function(err, req, res, next) {
 // tạo route chứa các handle function
 route(app);
 
+
+// db connect 
+const db = require("./config/index");
+db.connect();
+
 app.listen(port, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
