@@ -78,12 +78,33 @@
       <!-- Cart Menu -->
       <div class="cart-fav-search mb-100">
         <a href="/cart" class="cart-nav"><img src="/public/img/core-img/cart.png" alt="" /> Giỏ hàng ( <span
-            style="color: #FBB933;">
-          
+            style="color: #33eefb;">
+            <!--Có vòng lặp for ổ đâu -->
           </span> )</a>
         <a href="/favorite" class="fav-nav"><img src="/public/img/core-img/favorites.png" alt="" /> Yêu
           thích</a>
         <a href="#" class="search-nav"><img src="/public/img/core-img/search.png" alt="" /> Tìm kiếm</a>
       </div>
     </header>
+
+
+    <div class="products-catagories-area">
+      <div class="amado-pro-catagory clearfix">
+        <!-- Single Catagory -->
+        <% data.forEach(element => { %>
+          <% if(element.status == true){%>
+            <div class="single-products-catagory clearfix">
+              <a href="/categories/<%= element._id %> ">
+                <img src="<%= element.thumbnail %> " alt="Image" />
+                <!-- Hover Content -->
+                <div class="hover-content">
+                  <div class="line"></div>
+                  <h4><%= element.typeName %></h4>
+                </div>
+              </a>
+            </div>
+          <%} %> 
+        <%}) %>
+      </div>
+    </div>
 </body>
