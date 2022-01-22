@@ -71,6 +71,21 @@ passport.use('admin-local',new LocalStrategy(function(username,password,done)
     })
 }))
 
+passport.use(
+  'user-local',new LocalStrategy(function(username,password,done)
+  {
+    customerModel.findOne({'loginInformation.userName':username},
+    function(err,user)
+    {
+      if(err)
+      {
+        return done(err);
+      }
+      
+    })
+  })
+)
+
 //passport.initialize : middleware được gọi ở từng request, 
 //kiểm tra session lấy ra passport.user nếu chưa có thì tạo rỗng.
 app.use(passport.initialize());
