@@ -38,14 +38,49 @@ app.use(
   })
 )
 
+app.use(
+  session({
+    secret : "secret",
+    saveUninitialized : true, 
+    resave : false , 
+    cookie : {maxAge : Infinity , path:'/admin'}
+  })
+)
+app.use(flash());
 
+passport.use('admin-local',new LocalStrategy(function(username,password,done)
+{
+    adminModel.findOne({'loginInformation.userName':username},
+    function(err,user)
+    {
+      if(err)
+      {
+        return done(err);
+      }
+      // user không đúng 
+      if(!user)
+      {
+        return done(null,false,{message : 'Sai tên tài khoản hoặc mật khẩu'});
+      }
+      // mật khẩu không đúng 
+      if(user.loginInformation.passport !==  password)
+      {
+        return done(null,false,{message : 'Sai tên tài khoản hoặc mật khẩu'});
+      }
+      return done(null,user,{message : 'Đăng nhập thành công'})
+    })
+}))
+
+//passport.initialize : middleware được gọi ở từng request, 
+//kiểm tra session lấy ra passport.user nếu chưa có thì tạo rỗng.
 app.use(passport.initialize());
-app.use(passport.session());
 
+// passport.session: middleware sử dụng kịch bản Passport ,
+//  sử dụng session lấy thông tin user rồi gắn vào req.user.
+app.use(passport.session());
 
 // passport.serializeUser: 
 // hàm được gọi khi xác thực thành công để lưu thông tin user vào session
-
 passport.serializeUser((user,done)=>
 {
     return done(null,{username: user.loginInformation.userName, type : user.loginInformation.type});
@@ -81,7 +116,7 @@ passport.deserializeUser((user,done)=>
   }
 })
 
-app.use(flash());
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
