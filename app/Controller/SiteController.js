@@ -11,7 +11,7 @@ class siteController{
                 Customer.findOne({"loginInformation.userName" : req.session.passport.user.username}
                 ,(err,customersData)=>
                 {
-                    res.send(
+                    res.render("index",
                     {
                         data: data ,
                         message : req.flash("success"),
@@ -21,7 +21,7 @@ class siteController{
             }
             else
             {
-                res.send( { data: data, message: req.flash("success"), customer: undefined });
+                res.render("index", { data: data, message: req.flash("success"), customer: undefined });
             }
         })
     
