@@ -58,12 +58,12 @@ passport.use(
           return done(err);
         }
         if (!user) {
-          return done(null, false, {message: 'Sai tên tài khoản hoặc mật khẩu!'});
+          return done(null, false, {message: 'Sai tên tài khoản !'});
         }
         if (user.loginInformation.password !== password) {
-          return done(null, false, {message: 'Sai tên tài khoản hoặc mật khẩu!'});
+          return done(null, false, {message: 'Sai mật khẩu!'});
         } 
-        return done(null, user, {message: 'Đăng nhập thành công!'});
+        return done(null, user, {message: 'Đăng nhập thành công r nhé !'});
       }
     );
   })
@@ -71,17 +71,17 @@ passport.use(
 passport.use(
   'user-local',
   new LocalStrategy(function (username, password, done) {
-    customer.findOne(
+    customerModel.findOne(
       { 'loginInformation.userName': username },
       function (err, user) {
         if (err) {
           return done(err);
         }
         if (!user) {
-          return done(null, false, {message: 'Sai tên tài khoản hoặc mật khẩu!'});
+          return done(null, false, {message: 'Sai tên tài khoả!'});
         }
         if (user.loginInformation.password !== password) {
-          return done(null, false, {message: 'Sai tên tài khoản hoặc mật khẩu!'});
+          return done(null, false, {message: 'Sai mật khẩu!'});
         } 
         return done(null, user, {message: 'Đăng nhập thành công!'});
       }
