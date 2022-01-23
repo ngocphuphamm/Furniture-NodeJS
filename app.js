@@ -48,43 +48,46 @@ app.use(
 )
 app.use(flash());
 
-passport.use('admin-local',new LocalStrategy(function(username,password,done)
-{
-    adminModel.findOne({'loginInformation.userName':username},
-    function(err,user)
-    {
-      if(err)
-      {
-        return done(err);
-      }
-      // user không đúng 
-      if(!user)
-      {
-        return done(null,false,{message : 'Sai tên tài khoản hoặc mật khẩu'});
-      }
-      // mật khẩu không đúng 
-      if(user.loginInformation.passport !==  password)
-      {
-        return done(null,false,{message : 'Sai tên tài khoản hoặc mật khẩu'});
-      }
-      return done(null,user,{message : 'Đăng nhập thành công'})
-    })
-}))
-
 passport.use(
-  'user-local',new LocalStrategy(function(username,password,done)
-  {
-    customerModel.findOne({'loginInformation.userName':username},
-    function(err,user)
-    {
-      if(err)
-      {
-        return done(err);
+  'admin-local',
+  new LocalStrategy(function (username, password, done) {
+    adminModel.findOne(
+      { 'loginInformation.userName': username },
+      function (err, user) {
+        if (err) {
+          return done(err);
+        }
+        if (!user) {
+          return done(null, false, {message: 'Sai tên tài khoản hoặc mật khẩu!'});
+        }
+        if (user.loginInformation.password !== password) {
+          return done(null, false, {message: 'Sai tên tài khoản hoặc mật khẩu!'});
+        } 
+        return done(null, user, {message: 'Đăng nhập thành công!'});
       }
-      
-    })
+    );
   })
-)
+);
+passport.use(
+  'user-local',
+  new LocalStrategy(function (username, password, done) {
+    customer.findOne(
+      { 'loginInformation.userName': username },
+      function (err, user) {
+        if (err) {
+          return done(err);
+        }
+        if (!user) {
+          return done(null, false, {message: 'Sai tên tài khoản hoặc mật khẩu!'});
+        }
+        if (user.loginInformation.password !== password) {
+          return done(null, false, {message: 'Sai tên tài khoản hoặc mật khẩu!'});
+        } 
+        return done(null, user, {message: 'Đăng nhập thành công!'});
+      }
+    );
+  })
+);
 
 //passport.initialize : middleware được gọi ở từng request, 
 //kiểm tra session lấy ra passport.user nếu chưa có thì tạo rỗng.

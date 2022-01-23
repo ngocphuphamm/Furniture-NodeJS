@@ -393,7 +393,7 @@ img {
   z-index: 5000;
   top: -350px;
   left: 0;
-  background-color: #8217da;
+  background-color: #f5f7fa;
   -webkit-transition-duration: 500ms;
   transition-duration: 500ms;
 }
