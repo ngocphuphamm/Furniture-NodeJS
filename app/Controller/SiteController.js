@@ -34,7 +34,7 @@ class siteController{
             Customer.findOne(
               { "loginInformation.userName": req.session.passport.user.username },
               (err, customerResult) => {
-                res.render("cart", { customer: customerResult, message: req.flash('success') });
+                res.render("categories/cart", { customer: customerResult, message: req.flash('success') });
               }
             );
           } else {
