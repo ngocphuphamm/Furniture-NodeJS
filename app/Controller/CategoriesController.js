@@ -3,6 +3,7 @@ const Product =  require("../models/product");
 const Types = require("../models/types");
 
 class CategoriesController{
+  //[GET] 
   getList(req,res,next)
   {
     
@@ -53,5 +54,7 @@ class CategoriesController{
     });
   }
   
+
+ 
 }
 module.exports= new CategoriesController();

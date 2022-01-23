@@ -1,7 +1,8 @@
 const Customer =  require("../models/customers");
 const Types = require("../models/types");
 class siteController{
-    //[GET]  /home
+    // hiển thị các loại sản phẩm
+    //[GET]  /home 
     home(req,res,next)
     {
         Types.find({},(err,data)=>
@@ -26,6 +27,8 @@ class siteController{
         })
     
     }
+    
+    // sản phẩm trong các loại sản phẩm 
     //[GET] /cart 
     getCartPage(req,res,next)
     {
@@ -42,6 +45,8 @@ class siteController{
           }
     }
 
+
+    /////USER////
     //[GET] /login
     getLoginPage(req,res,next)
     {
@@ -59,6 +64,7 @@ class siteController{
             message : req.flash("success").length != 0 ? req.flash("success") : req.flash("error")
         })
     }
+
 
     //[POST] /sign-up
     postRegisterUser(req,res,next)
@@ -109,5 +115,7 @@ class siteController{
             }
         })
     }
+
+    
 }
 module.exports= new siteController ();
