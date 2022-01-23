@@ -13,8 +13,9 @@ router.get("/cart",siteController.getCartPage)
 router.get("/login",siteController.getLoginPage);
 //  passport.authenticate gọi như event emiter
 router.post("/login",
-            passport.authenticate("user-local",
+            passport.authenticate('user-local',
             {
+              
                 successRedirect : "/",
                 failureRedirect :"/login",
                 successFlash : true , 

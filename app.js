@@ -2,8 +2,7 @@
 const adminModel = require("./app/models/admin");
 const customerModel = require("./app/models/customers");
 ///
-const http = require("http");
-var createError = require('http-errors');
+
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -83,6 +82,7 @@ passport.use(
         if (user.loginInformation.password !== password) {
           return done(null, false, {message: 'Sai mật khẩu!'});
         } 
+        console.log(user);
         return done(null, user, {message: 'Đăng nhập thành công!'});
       }
     );
@@ -101,7 +101,8 @@ app.use(passport.session());
 // hàm được gọi khi xác thực thành công để lưu thông tin user vào session
 passport.serializeUser((user,done)=>
 {
-    return done(null,{username: user.loginInformation.userName, type : user.loginInformation.type});
+    console.log("đã vào");
+   return done(null, {username: user.loginInformation.userName, type: user.loginInformation.type});
 })
 
 
@@ -122,11 +123,11 @@ passport.deserializeUser((user,done)=>
       })
   }
   else{
-     customerModel.findOne({'loginInformation.username': user.username},(err,data)=>
+     customerModel.findOne({'loginInformation.userName': user.username},(err,data)=>
      {
        if(err) return done(err); 
        if(!data) return done(null,false);
-       if(data.loginInformation.username == user.username)
+       if(data.loginInformation.userName == user.username)
        {
          return done(null,data)
        }

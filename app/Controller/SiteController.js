@@ -29,18 +29,17 @@ class siteController{
     //[GET] /cart 
     getCartPage(req,res,next)
     {
-        var customer = req.session.passport.user.username;
-      // kiểm tra xác thực người dùng đã đăng nhập chưa 
-      if(req.isAuthenticated())
-      {
-          Customer.findOne({"loginInformation.userName":customer},(err,dataCustomer)=>
-          {
-              res.render("cart",{
-                  customer:customersData,
-                  message : req.flash("thành công")
-                })
-          })
-      }
+  
+        if (req.isAuthenticated()) {
+            Customer.findOne(
+              { "loginInformation.userName": req.session.passport.user.username },
+              (err, customerResult) => {
+                res.render("cart", { customer: customerResult, message: req.flash('success') });
+              }
+            );
+          } else {
+            res.redirect("/login");
+          }
     }
 
     //[GET] /login
@@ -48,14 +47,14 @@ class siteController{
     {
         var messageError = req.flash("error");
         var messageSuccess = req.flash("success");
-        res.render("loginuser",{ message : messageError.length !=0 ? messageError : messageSuccess,
+        res.render("authencation/loginuser",{ message : messageError.length !=0 ? messageError : messageSuccess,
                                  typeMessage : messageSuccess.length != 0 ? messageSuccess : messageError })
     }
 
     //[GET] /sign-up
     getRegisterPage(req,res,next)
     {
-        res.render("sign-up",
+        res.render("authencation/sign-up",
         {
             message : req.flash("success").length != 0 ? req.flash("success") : req.flash("error")
         })
