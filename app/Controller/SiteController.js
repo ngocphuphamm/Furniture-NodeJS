@@ -1,5 +1,7 @@
 const Customer =  require("../models/customers");
 const Types = require("../models/types");
+const Product = require("../models/product");
+
 class siteController{
     // hiển thị các loại sản phẩm
     //[GET]  /home 
@@ -116,6 +118,41 @@ class siteController{
         })
     }
 
+
+    // add sản phẩm vào giỏ hàng
+    //[GET] /cart/:id
+    getAddToCartSingle(req,res,next)
+    {
+        if(req.isAuthenticated())
+        {
+            var  id = req.params.id; 
+            var username = req.session.passport.user.username; 
+            Product.findOne({_id:id},(err,productResult)=>
+            {
+                Customer.findOneAndUpdate({"loginInformation.userName":username},{
+                    $push : { 
+                        listProduct :[
+                         {   productID: productResult._id.toString(),
+                            productName: productResult.productName,
+                            productPrice: productResult.description.price,
+                            productImage: productResult.description.imageList[0],
+                            amount: 1,}
+                        ]
+                    }
+                })
+                .then(()=>
+                {
+                    req.flash("success","Sản phẩm đã thêm vào giỏ hàng");
+                    res.redirect("/product/");
+                })
+                .catch(next);
+            })
+        }
+        else
+        {
+            res.redirect("/login");
+        }
+    }
     
 }
 module.exports= new siteController ();

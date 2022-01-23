@@ -8,7 +8,7 @@ const siteController = require("../app/Controller/SiteController")
 
 router.get("/",siteController.home);
 router.get("/cart",siteController.getCartPage)
-
+router.get("/cart/:id",siteController.getAddToCartSingle)
 
 // user 
 router.get("/login",siteController.getLoginPage);
