@@ -6,4 +6,5 @@ const ProductController = require("../app/Controller/ProductController")
 router.get('/',ProductController.getProductDefault);
 router.get("/favorite/:id",ProductController.getAddFavorite);
 
+router.post("/product-filter",ProductController.filterProduct)
 module.exports = router;
