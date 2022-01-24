@@ -176,5 +176,25 @@ class siteController{
         })
         .catch(next);
     }
+
+    // XÓA SẢN PHẨM
+    //[GET] /cart/delete/:id
+    deleteProduct(req,res,next)
+    {
+        var idProduct = req.params.id
+        var user = req.session.passport.user.username; 
+        Customer.updateMany({"loginInformation.userName":user},{
+            $pull : {
+                listProduct : {
+                    productID :  idProduct,
+                }
+            }
+        })
+        .then(()=>
+        {
+            res.redirect("/cart")
+        })
+        .catch(next);
+    }
 }
 module.exports= new siteController ();
