@@ -154,5 +154,27 @@ class siteController{
         }
     }
     
+
+    // update dữ liệu trong  giỏ hàng 
+    //[POST]  /cart/update/:id
+    postUpdateQTYInCart(req,res,next)
+    {
+        const quantity = parseInt(req.body.amount); 
+        const idProduct = req.params.id; 
+        const userCustomer = req.session.passport.user.username; 
+        Customer.updateOne({"loginInformation.userName":userCustomer,"listProduct.productID":idProduct},
+        {
+            $set : { 
+                "listProduct.$.amount": quantity
+            }
+        })
+        .then(()=>
+        {
+            console.log("thành cơng")
+            res.redirect("/cart");
+
+        })
+        .catch(next);
+    }
 }
 module.exports= new siteController ();
