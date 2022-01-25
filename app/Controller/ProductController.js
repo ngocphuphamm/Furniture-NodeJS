@@ -79,6 +79,8 @@ class ProductController {
   // lọc dữ liệu loại
   // /product/product-filter
   filterProduct(req, res, next) {
+
+  
     // selection loại sản phẩm
     var selection = req.body.selection;
     // select loại thương hiệu sản xuất
@@ -94,7 +96,7 @@ class ProductController {
           {
             description: {
               $elementMatch: {
-                types: selection,
+                typeCode: selection,
                 supplierCode: supplierFilter,
               },
             },
@@ -122,9 +124,9 @@ class ProductController {
                              supplierFilter : supplierFilter  })
                   })
                 }
+                // nếu khách hàng chưa đăng nhập trả về dữ liệu khách hàng rỗng 
                 else
                 {
-                  console.log("vao hanh cong")
                   res.send({
                     data:dataProduct,
                     types :dataType,
@@ -141,7 +143,25 @@ class ProductController {
           }
         );
       }
+      // nếu khách hàng không lựa chọn nhà sản xuất  
+      else
+      {
+        product.find({
+          description : {
+            $elementMatch : {
+              typeCode: selection,
+              supplierCode: supplierFilter,
+            }
+          }
+        },(err,dataProduct)=>
+        {
+          
+        })
+      
+      }
     }
+ 
+    
   }
 }
 module.exports = new ProductController();
