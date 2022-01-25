@@ -77,10 +77,8 @@ class ProductController {
   }
 
   // lọc dữ liệu loại
-  // /product/product-filter
+  // [GET] /product/product-filter
   filterProduct(req, res, next) {
-
-  
     // selection loại sản phẩm
     var selection = req.body.selection;
     // select loại thương hiệu sản xuất
@@ -111,11 +109,11 @@ class ProductController {
                 {
                   customers.findOne({"loginInformation.userName" : req.session.passport.user.username},(err,customerData)=>
                   {
-                    console.log("vao dang nhap thanh cong")
-                    res.send({
+                    console.log(dataProduct)
+                    res.render("product-filter",{
                               data:dataProduct,
                               types :dataType,
-                              supplier : dataSupplier , 
+                              suppliers : dataSupplier , 
                               itemsPerPage : itemsPerPage, 
                               currentPage : 1 , 
                               customer : customerData,
@@ -127,10 +125,11 @@ class ProductController {
                 // nếu khách hàng chưa đăng nhập trả về dữ liệu khách hàng rỗng 
                 else
                 {
-                  res.send({
+                  console.log(dataProduct + "2");
+                  res.render("product-filter",{
                     data:dataProduct,
                     types :dataType,
-                    supplier : dataSupplier  , 
+                    suppliers : dataSupplier  , 
                     itemsPerPage : itemsPerPage, 
                     currentPage : 1 , 
                     customer : undefined,
@@ -146,19 +145,98 @@ class ProductController {
       // nếu khách hàng không lựa chọn nhà sản xuất  
       else
       {
-        product.find({
-          description : {
-            $elementMatch : {
-              typeCode: selection,
-              supplierCode: supplierFilter,
-            }
-          }
-        },(err,dataProduct)=>
+        product.find(
+          {'description.typeCode': selection}
+        ,(err,dataProduct)=>
         {
-          
+           // tìm tất cả loại sản phảm
+           types.find({}, (err, dataType) => {
+            // tìm tất cả nhà cung cấp 
+            supplier.find({}, (err, dataSupplier) => {
+              // nếu đã đăng nhập thì set session cookie để có gì cho vào được giỏ hàng hay yêu thích 
+              if(req.isAuthenticated())
+              {
+                customers.findOne({"loginInformation.userName" : req.session.passport.user.username},(err,customerData)=>
+                {
+                  console.log(dataProduct + "3");
+                  res.render("product-filter",{
+                    
+                            data:dataProduct,
+                            types :dataType,
+                            suppliers : dataSupplier , 
+                            itemsPerPage : itemsPerPage, 
+                            currentPage : 1 , 
+                            customer : customerData,
+                            message : req.flash("Thanh Cong"),
+                            selected : selection , 
+                           supplierFilter : supplierFilter  })
+                })
+              }
+              // nếu khách hàng chưa đăng nhập trả về dữ liệu khách hàng rỗng 
+              else
+              {
+                res.render("product-filter",{
+                  data:dataProduct,
+                  types :dataType,
+                  suppliers : dataSupplier  , 
+                  itemsPerPage : itemsPerPage, 
+                  currentPage : 1 , 
+                  customer : undefined,
+                  message : req.flash("Thanh Cong"),
+                  selected : selection , 
+                 supplierFilter : supplierFilter  })
+              }
+            });
+          });
         })
       
       }
+    }
+    else
+    {
+      product.find({"description.supplierCode": supplierFilter }
+      ,(err,dataProduct)=>
+      {
+         // tìm tất cả loại sản phảm
+         types.find({}, (err, dataType) => {
+          // tìm tất cả nhà cung cấp 
+          supplier.find({}, (err, dataSupplier) => {
+            // nếu đã đăng nhập thì set session cookie để có gì cho vào được giỏ hàng hay yêu thích 
+            if(req.isAuthenticated())
+            {
+              customers.findOne({"loginInformation.userName" : req.session.passport.user.username},(err,customerData)=>
+              {
+                console.log(dataProduct + "4");
+                res.render("product-filter",{
+                          data:dataProduct,
+                          types :dataType,
+                          supplier : dataSupplier , 
+                          itemsPerPage : itemsPerPage, 
+                          currentPage : 1 , 
+                          customer : customerData,
+                          message : req.flash("Thanh Cong"),
+                          selected : selection , 
+                         supplierFilter : supplierFilter  })
+              })
+            }
+            // nếu khách hàng chưa đăng nhập trả về dữ liệu khách hàng rỗng 
+            else
+            {
+              console.log(dataProduct + "5");
+              res.render("product-filter",{
+                data: dataProduct,
+                types :dataType,  
+                supplier : dataSupplier  , 
+                itemsPerPage : itemsPerPage, 
+                currentPage : 1 , 
+                customer : undefined,
+                message : req.flash("Thanh Cong"),
+                selected : selection , 
+               supplierFilter : supplierFilter  })
+            }
+          });
+        });
+      })
     }
  
     
