@@ -32,4 +32,15 @@ router.get("/sign-up",siteController.getRegisterPage);
 router.post("/sign-up",siteController.postRegisterUser);
 
 router.get("/search",siteController.search);
+
+// lưu dữ liệu khi khách hàng ấn yêu thích 
+router.get("/product/favorite/:id",siteController.getAddFavorite);
+
+// redner ra list  yêu thích của khach1h hàng 
+router.get("/favorite",siteController.getFavoritePage)
+// lấy dữ liệu phận trang sau trang 1 của yêu thích 
+router.get("/favorite/page/:page",siteController.getFavoriteAtPage)
+// XÓA DỮ LIỆU  YÊU THÍCH SẢN PHẨM 
+router.get('/product/favorite/delete/:id', siteController.getDeleteFavorite);
+
 module.exports = router; 

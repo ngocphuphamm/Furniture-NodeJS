@@ -45,37 +45,7 @@ class ProductController {
     });
   }
 
-  // thêm vào sản phẩm yêu thích
-  // [GET] /product/favorite/:id
-  getAddFavorite(req, res, next) {
-    // kiểm tra người dùng đăng nhập hay chưa
-    if (req.isAuthenticated()) {
-      var id = req.params.id;
-      // session được lưu đã  được config trong passport
-      var user = req.session.passport.user.username;
-      // tìm kiểm sản phẩm được add vào giỏ hàng
-      product.find({ _id: id }, (err, productData) => {
-        // add dữ liệu sản phẩm vào customer
-        customers
-          .findOneAndUpdate(
-            { "loginInformation.userName": user },
-            {
-              $push: {
-                listFavorite: [productData],
-              },
-            }
-          )
-          .then(() => {
-            req.flash("success", "Đã thêm vào danh sách");
-            res.redirect(`/product/`);
-          })
-          .catch(next);
-      });
-    } else {
-      res.redirect("/login");
-    }
-  }
-
+  
   // lọc dữ liệu loại
   // [GET] /product/product-filter
   filterProduct(req, res, next) {
@@ -353,5 +323,8 @@ class ProductController {
   {
     console.log(req.body)
   }
+
+
+ 
 }
 module.exports = new ProductController();

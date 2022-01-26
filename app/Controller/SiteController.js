@@ -4,6 +4,8 @@ const Product = require("../models/product");
 const suppliers = require("../models/suppliers");
 const product = require("../models/product");
 const customers = require("../models/customers");
+const OjectId = require('mongodb').ObjectId;
+const types = require("../models/types");
 
 class siteController {
   // hiển thị các loại sản phẩm
@@ -241,5 +243,109 @@ class siteController {
       });
     });
   }
+  
+   // render list khách hàng yêu thich1
+  //[GET] /favorite/
+  getFavoritePage(req,res,next)
+  {
+    var itemsPerPage = 6;
+    if(req.isAuthenticated()) {
+      customers.findOne({'loginInformation.userName': req.session.passport.user.username}, (err, customerResult) => {
+        types.find({}, (err, data) => {
+          suppliers.find({}, (err, supplier) => {
+            res.render("favorites", {
+              data: customerResult.listFavorite,
+              types: data,
+              suppliers: supplier,
+              itemsPerPage: itemsPerPage,
+              currentPage: 1,
+              message: req.flash('success'),
+              customer: customerResult
+            });
+          });
+        });
+      });
+    } else {
+      res.redirect('/login');
+    }
+  }
+
+  //[get] favorite/page/2
+  getFavoriteAtPage(req,res,next)
+  {
+    var itemsPerPage = 6;
+    var page = req.params.page;
+    if(req.isAuthenticated()) {
+      customers.findOne({'loginInformation.userName': req.session.passport.user.username}, (err, customerResult) => {
+        types.find({}, (err, data) => {
+          suppliers.find({}, (err, supplier) => {
+            res.render("favorites", {
+              data: customerResult.listFavorite,
+              types: data,
+              suppliers: supplier,
+              itemsPerPage: itemsPerPage,
+              currentPage: page,
+              message: req.flash('success'),
+              customer: customerResult
+            });
+          });
+        });
+      });
+    } else {
+      res.redirect('/login');
+    }
+  }
+
+  //[GET] /product/favorite/delete/:id
+  getDeleteFavorite(req, res, next) {
+    if (req.isAuthenticated()) {
+      var id = req.params.id;
+      var user = req.session.passport.user.username;
+      customers.updateMany({ 'loginInformation.userName': user }, { $pull: { listFavorite: { _id: OjectId(id) } } })
+        .then(() => {
+          req.flash("success", "Đã sản phẩm khỏi yêu thích!");
+          res.redirect('/favorite');
+        })
+        .catch((err) => {
+          console.log(err);
+          next();
+        });
+    } else {
+      res.redirect('/login');
+    }
+  }
+
+
+  // thêm vào sản phẩm yêu thích
+  // [GET] /product/favorite/:id
+  getAddFavorite(req, res, next) {
+    // kiểm tra người dùng đăng nhập hay chưa
+    if (req.isAuthenticated()) {
+      var id = req.params.id;
+      // session được lưu đã  được config trong passport
+      var user = req.session.passport.user.username;
+      // tìm kiểm sản phẩm được add vào giỏ hàng
+      product.find({ _id: id }, (err, productData) => {
+        // add dữ liệu sản phẩm vào customer
+        customers
+          .findOneAndUpdate(
+            { "loginInformation.userName": user },
+            {
+              $push: {
+                listFavorite: [productData],
+              },
+            }
+          )
+          .then(() => {
+            req.flash("success", "Đã thêm vào danh sách");
+            res.redirect(`/product/`);
+          })
+          .catch(next);
+      });
+    } else {
+      res.redirect("/login");
+    }
+  }
+
 }
 module.exports = new siteController();
