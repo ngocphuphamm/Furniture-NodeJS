@@ -160,8 +160,9 @@
 
         <div class="row">
           <!-- Single Product Area -->
-          <% product=data.length> itemsPerPage ? data.slice((currentPage - 1) * itemsPerPage, currentPage *
+          <% product= data.length> itemsPerPage ? data.slice((currentPage - 1) * itemsPerPage, currentPage *
             itemsPerPage) : data%>
+           
             <% product.forEach(element=> {%>
               <% if(element.description.status==true){%>
                 <div class="col-12 col-sm-6 col-md-12 col-xl-6">

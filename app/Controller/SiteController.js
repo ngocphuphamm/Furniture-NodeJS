@@ -7,6 +7,7 @@ const customers = require("../models/customers");
 const OjectId = require('mongodb').ObjectId;
 const types = require("../models/types");
 
+
 class siteController {
   // hiển thị các loại sản phẩm
   //[GET]  /home
@@ -253,7 +254,7 @@ class siteController {
       customers.findOne({'loginInformation.userName': req.session.passport.user.username}, (err, customerResult) => {
         types.find({}, (err, data) => {
           suppliers.find({}, (err, supplier) => {
-            res.render("favorites", {
+            res.render( "favorites",{
               data: customerResult.listFavorite,
               types: data,
               suppliers: supplier,
@@ -319,13 +320,14 @@ class siteController {
   // thêm vào sản phẩm yêu thích
   // [GET] /product/favorite/:id
   getAddFavorite(req, res, next) {
+    console.log("vào giỏ hàng")
+
     // kiểm tra người dùng đăng nhập hay chưa
     if (req.isAuthenticated()) {
-      var id = req.params.id;
-      // session được lưu đã  được config trong passport
-      var user = req.session.passport.user.username;
+    var id = req.params.id ; 
+    var user = req.session.passport.user.username;      
       // tìm kiểm sản phẩm được add vào giỏ hàng
-      product.find({ _id: id }, (err, productData) => {
+      product.findOne({ _id: id }, (err, productData) => {
         // add dữ liệu sản phẩm vào customer
         customers
           .findOneAndUpdate(
