@@ -7,6 +7,7 @@ router.get('/',ProductController.getProductDefault);
 router.get("/favorite/:id",ProductController.getAddFavorite);
 
 router.post("/product-filter",ProductController.filterProduct)
-
 router.get('/product-filter/:page', ProductController.filterProductAtPage)
+
+router.get("/product/search",ProductController.searchProduct)
 module.exports = router;

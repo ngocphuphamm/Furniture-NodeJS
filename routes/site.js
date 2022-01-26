@@ -30,4 +30,6 @@ router.post("/login",
 router.get("/sign-up",siteController.getRegisterPage);
 
 router.post("/sign-up",siteController.postRegisterUser);
+
+router.get("/search",siteController.search);
 module.exports = router; 

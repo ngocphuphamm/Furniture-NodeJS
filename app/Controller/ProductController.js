@@ -293,9 +293,65 @@ class ProductController {
       }
     }
   }
+  // phân trang các trang sau 1  
+  // [GET] /product-filter/:page 
   filterProductAtPage(req,res,next)
   {
-    
+    const supplierFilter = req.session.supplierFilter;
+    const selection = req.session.selection;
+    const itemsPerPage =6 ; 
+    const currentPage = req.params.page ; 
+    console.log(currentPage);
+    if(selection)
+    {
+      product.find({"decription.typeCode": selection},(err,dataProduct)=>
+      {
+        type.find({},(err,dataType)=>
+        {
+          supplier.find({},(err,dataSupplier)=>
+          {
+            if(req.isAuthenticated())
+            {
+              customers.findOne({"loginInformation.userName":req.session.passport.user.username},(err,customerData)=>
+              {
+                res.render("product-filter", {
+                  data: dataProduct,
+                  types: dataType,
+                  suppliers: dataSupplier,
+                  itemsPerPage: itemsPerPage,
+                  currentPage: currentPage,
+                  customer: customerData,
+                  message: req.flash("Thanh Cong"),
+                  selected: selection,
+                  supplierFilter: supplierFilter,
+                });
+              })
+            }
+            else
+            {
+              res.render("product-filter", {
+                data: dataProduct,
+                types: dataType,
+                suppliers: dataSupplier,
+                itemsPerPage: itemsPerPage,
+                currentPage: currentPage,
+                customer: undefined,
+                message: req.flash("Thanh Cong"),
+                selected: selection,
+                supplierFilter: supplierFilter,
+              });
+            }
+          })
+        })
+      })
+    }
+  }
+
+  //search tìm kiếm 
+  //[GET] /product/search
+  searchProduct(req,res,next)
+  {
+    console.log(req.body)
   }
 }
 module.exports = new ProductController();
