@@ -43,4 +43,7 @@ router.get("/favorite/page/:page",siteController.getFavoriteAtPage)
 // XÓA DỮ LIỆU  YÊU THÍCH SẢN PHẨM 
 router.get('/product/favorite/delete/:id', siteController.getDeleteFavorite);
 
+// hiển thị thông tin sản phẩm
+router.get("/checkout",siteController.getCheckOutPage);
+
 module.exports = router; 

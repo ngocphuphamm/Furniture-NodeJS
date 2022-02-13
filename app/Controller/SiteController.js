@@ -349,5 +349,19 @@ class siteController {
     }
   }
 
+  //[GET] /checkout
+  getCheckOutPage(req,res,next){
+    if(req.isAuthenticated()){
+        console.log("vào thành công")
+        var user = req.session.passport.user.username;
+        customers.findOne({"loginInformation.userName": user},(err,dataCustom)=>{
+              res.render("checkout",{customer:dataCustom})
+        })
+    }
+    else
+    {
+      res.redirect("/login")
+    }
+  }
 }
 module.exports = new siteController();
