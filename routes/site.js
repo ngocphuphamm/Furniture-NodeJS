@@ -43,7 +43,17 @@ router.get("/favorite/page/:page",siteController.getFavoriteAtPage)
 // XÓA DỮ LIỆU  YÊU THÍCH SẢN PHẨM 
 router.get('/product/favorite/delete/:id', siteController.getDeleteFavorite);
 
-// hiển thị thông tin sản phẩm
+// đặt hàng
 router.get("/checkout",siteController.getCheckOutPage);
+// xuất đơn đặt hàng
+router.post("/checkout/bills",siteController.postCheckOut);
+
+const regions = require("../app/models/regions");
+router.get("/hello",(req,res,next)=>{
+    regions.find({})
+    .then((data)=>{
+        res.send(data);
+    })
+})
 
 module.exports = router; 

@@ -6,8 +6,8 @@ const product = require("../models/product");
 const customers = require("../models/customers");
 const OjectId = require('mongodb').ObjectId;
 const types = require("../models/types");
-
-
+const regions = require("../models/regions")
+const bill = require("../models/bill");
 class siteController {
   // hiển thị các loại sản phẩm
   //[GET]  /home
@@ -361,6 +361,52 @@ class siteController {
     else
     {
       res.redirect("/login")
+    }
+  }
+
+  // [POST] /checkout
+  postCheckOut(req,res,next){
+   
+    if(req.isAuthenticated())
+    {
+      var user = req.session.passport.user.username;
+      var city = req.body.city;
+      var district = req.body.district;
+      var ward  = req.body.ward;
+      var address = req.body.address;
+      customers.findOne({"loginInformation.userName":user},(err,customerData)=>{
+          regions.findOne({Id : city},(err,dataRegion)=>{
+              var cityName = dataRegion.Name;
+              // lọc ra quận mà người dùng đã chọn
+              var districtData =  dataRegion.Districts.filter((el)=>{
+                return el.Id == district;
+              });
+              var districtName =  districtData[0].Name;
+              var wardData = districtData[0].Wards.filter((el)=>{
+                return el.Id = ward ;
+              })
+              var wardName =  wardData[0].Name;
+              var data = {
+                'userID' : customerData._id,
+                 'displayName' : customerData.fullNameCustomer,
+                 'listProduct' : customerData.listProduct,
+                 'address' : `${address},${wardName},${districtName},${city}`,
+                 'reques' : req.body.comment,
+                 'status' : 'Chờ xác nhận'
+              }
+              var newBill = new bill(data);
+              newBill.save(data)
+              .then(()=>{
+                req.flash('success','đặt hàng thành công');
+                res.redirect('/cart');
+              })
+              
+          })
+      })
+    }
+    else
+    {
+      res.redirect('/login');
     }
   }
 }
