@@ -13,4 +13,7 @@ route.post('/login',passport.authenticate('admin-local',{failureRedirect:'/admin
                     ,adminController.getDashboardPage);
 
 route.get('/dashboard',adminController.getDashboardPage);
+
+// hiển thị trang quản lý loại sản phẩm
+route.get('/dashboard/categories-manager' ,adminController.managerCategories);
 module.exports = route; 
