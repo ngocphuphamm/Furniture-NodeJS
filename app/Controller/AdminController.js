@@ -56,5 +56,27 @@ class AdminController{
             res.redirect('/admin/login');
         } 
    }
+
+   pendingOrders(req,res,next){
+       var numberItemPerpage = 6 ; 
+       if(req.isAuthenticated())
+       {
+            Admin.findOne({"loginInformation.userName": req.session.passport.user.username},(err,dataAdmin)=>{
+                Bills.find({'staus':'Chờ xác nhận'},(err,dataBill)=>{
+                    res.render("dashboards/pending-order"
+                        ,{
+                            customer: dataAdmin,
+                            bills: dataBill,
+                            page: 1,
+                            numberItemPerpage: numberItemPerpage,
+                            message: req.flash("success")
+                        });
+                })
+            })
+       }
+       else{
+           res.redirect('/admin/login');
+       }
+   }
 }
 module.exports = new AdminController;

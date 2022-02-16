@@ -16,4 +16,7 @@ route.get('/dashboard',adminController.getDashboardPage);
 
 // hiển thị trang quản lý loại sản phẩm
 route.get('/dashboard/categories-manager' ,adminController.managerCategories);
+
+// hiển thị trang đơn hàng chờ xác nhận
+route.get('/dashboard/pending-orders-manager',adminController.pendingOrders);
 module.exports = route; 
