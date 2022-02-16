@@ -25,7 +25,7 @@ class AdminController{
             })
         }
         else{
-            res.redirect('./admin/login');
+            res.redirect('./login');
         }
    }
 }

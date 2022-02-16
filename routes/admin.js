@@ -12,4 +12,5 @@ route.get('/login',adminController.getLogin);
 route.post('/login',passport.authenticate('admin-local',{failureRedirect:'/admin/login',successFlash:true,failureFlash:true})
                     ,adminController.getDashboardPage);
 
+route.get('/dashboard',adminController.getDashboardPage);
 module.exports = route; 

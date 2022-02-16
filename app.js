@@ -112,7 +112,7 @@ passport.deserializeUser((user,done)=>
 {
   if(user.type == 'Admin')
   {
-      adminModel.findOne({'loginInformation.username':user.username},(err,data)=>
+      adminModel.findOne({'loginInformation.userName':user.username},(err,data)=>
       {
         if(err) return done(err);
         if(!data) return done(null,false);
